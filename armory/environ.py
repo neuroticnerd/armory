@@ -30,9 +30,8 @@ class Environment(object):
     """
     NOT_PROVIDED = object()
 
-    def __init__(self, varconf, default_key=None, coerce=str):
+    def __init__(self, varconf, coerce=str):
         self._varconf = varconf
-        self._default_key = default_key
         self._coerce = coerce
 
     def __call__(self, getvar):
@@ -42,10 +41,6 @@ class Environment(object):
             varinfo = {}
         coerce = varinfo.get('coerce', self._coerce)
         default = varinfo.get('default', self.NOT_PROVIDED)
-        try:
-            default = default.get(self._default_key, self.NOT_PROVIDED)
-        except AttributeError:
-            pass
         if default is self.NOT_PROVIDED:
             value = os.environ.get(getvar)
             if value is None:

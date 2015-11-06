@@ -12,7 +12,8 @@ if __name__ == "__main__":
         'PYTHONPATH': {'default': None},
         'PYTHONUNBUFFERED': {},
         'ANSIBLE_ROLES_PATH': {},
-        'SOME_RANDOM_THING': {'default': 3, 'coerce': int}
+        'SOME_RANDOM_THING': {'default': 3, 'coerce': int},
+        'STRING_TO_INT': {'default': '6256', 'coerce': int},
     })
 
     # print the values of a couple env vars
@@ -25,17 +26,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(e)
 
-    # ## what if you want to select a default value based on a previous value?
-    MODE = 'prod'
-    env = Environment({
-        'SOME_UNSET_VAR': {
-            'default': {
-                'dev': 'this is a dev var',
-                'prod': 'this is a prod var',
-            },
-        },
-    }, default_key=MODE)
-
-    print(env('SOME_UNSET_VAR'))
-
-    # what if MODE had been set to dev?
+    # environment variables are treated as strings by default
+    print(env('STRING_TO_INT'))
+    print(type(env('STRING_TO_INT')))
