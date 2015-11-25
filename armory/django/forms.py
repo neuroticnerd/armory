@@ -47,18 +47,32 @@ class RangeWidget(forms.widgets.MultiWidget):
         return (value, value)
 
     def format_output(self, rendered_widgets):
-        addon_class = 'class="input-group-addon"'
-        pre = '<div {0}>{1}</div>'
-        pre_from = pre.format(addon_class, 'from')
-        pre_to = pre.format(addon_class, 'to')
-        first = rendered_widgets[:self._from_to_divisor]
-        second = rendered_widgets[self._from_to_divisor:]
-        elements = []
-        elements.append(pre_from)
-        elements.extend(first)
-        elements.append(pre_to)
-        elements.extend(second)
-        return str().join(elements)
+        lower = rendered_widgets[:self._from_to_divisor]
+        upper = rendered_widgets[self._from_to_divisor:]
+        return str().join([self.addon_from] + lower + [self.addon_to] + upper)
+
+    def build_input_addon(self, content=None, elem=None, classes=None):
+        css_class = 'input-group-addon'
+        addon = '<{elem} class="{classes}">{content}</{elem}>'
+        content = content if content is not None else ''
+        elem = elem if elem is not None else 'span'
+        if classes is None:
+            addon_classes = css_class
+        else:
+            addon_classes = ' '.join([css_class, classes])
+        return addon.format(elem=elem, classes=addon_classes, content=content)
+
+    @property
+    def addon_from(self):
+        if not hasattr(self, '_addon_from'):
+            self._addon_from = self.build_input_addon('from')
+        return self._addon_from
+
+    @property
+    def addon_to(self):
+        if not hasattr(self, '_addon_to'):
+            self._addon_to = self.build_input_addon('to')
+        return self._addon_to
 
 
 class RangeField(forms.fields.MultiValueField):
