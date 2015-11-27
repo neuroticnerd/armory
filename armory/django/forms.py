@@ -129,7 +129,48 @@ class IntegerRangeField(RangeField):
         )
 
 
+class DateTimeRangeWidget(RangeWidget):
+    """ django widget for displaying datetime values representing a range """
+
+    def format_output(self, rendered_widgets):
+        lower = rendered_widgets[:self._from_to_divisor]
+        upper = rendered_widgets[self._from_to_divisor:]
+        if len(lower) > 1:
+            lower.insert(1, self.addon_date)
+            lower.append(self.addon_time)
+        else:
+            lower.append(self.addon_datetime)
+        if len(upper) > 1:
+            upper.insert(1, self.addon_date)
+            upper.append(self.addon_time)
+        else:
+            upper.append(self.addon_datetime)
+        return str().join([self.addon_from] + lower + [self.addon_to] + upper)
+
+    @property
+    def addon_date(self):
+        if not hasattr(self, '_addon_date'):
+            date_classes = 'glyphicon glyphicon-date'
+            self._addon_date = self.build_input_addon(classes=date_classes)
+        return self._addon_date
+
+    @property
+    def addon_time(self):
+        if not hasattr(self, '_addon_time'):
+            time_classes = 'glyphicon glyphicon-time'
+            self._addon_time = self.build_input_addon(classes=time_classes)
+        return self._addon_time
+
+    @property
+    def addon_datetime(self):
+        if not hasattr(self, '_addon_datetime'):
+            dt_classes = 'glyphicon glyphicon-datetime'
+            self._addon_datetime = self.build_input_addon(classes=dt_classes)
+        return self._addon_datetime
+
+
 class DateTimeRangeField(RangeField):
+    widget = DateTimeRangeWidget
 
     def __init__(self, split=False, *args, **kwargs):
         self._split = split
