@@ -4,8 +4,8 @@ from __future__ import absolute_import
 import logging
 import smtplib
 
-from armory.utils import jsonify
-from armory.phone import carrier_lookup
+from armory.phone.lookup import carrier_lookup
+from armory.serialize import jsonify
 
 
 class PhoneNumber(object):
@@ -79,7 +79,7 @@ class PhoneNumber(object):
 # http://stackoverflow.com/questions/9763455/how-to-send-a-mail-directly-to-smtp-server-without-authentication
 class EmailSMS(object):
     def __init__(self, server, username, passcode, sender=None, logger=None):
-        logger = logger if logger else ''
+        logger = logger if logger else __name__
         self.log = logging.getLogger(logger)
         self._smtp = None
         self._smtp_tls = True
@@ -90,14 +90,15 @@ class EmailSMS(object):
         self._sender = sender if sender else self._smtp_user
 
     def __enter__(self):
-        self._setup_smtp()
+        self._initialize_smtp()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         if self._smtp:
             self._smtp.quit()
+        self._smtp = None
 
-    def _setup_smtp(self):
+    def _initialize_smtp(self):
         self._smtp = smtplib.SMTP(self._server)
         self._smtp.starttls()
         self._smtp.login(self._smtp_user, self._passcode)
@@ -105,11 +106,11 @@ class EmailSMS(object):
     @property
     def smtp(self):
         if not self._smtp:
-            self._setup_smtp()
+            self._initialize_smtp()
         return self._smtp
 
     def send(self, recipient, message):
-        self._smtp.sendmail(self._sender, recipient, message)
+        self.smtp.sendmail(self._sender, recipient, message)
         self.log.info('sender: {0}'.format(self._sender))
         self.log.info('recipient: {0}'.format(recipient))
         self.log.info('message: "{0}"'.format(message))

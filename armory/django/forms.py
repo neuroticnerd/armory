@@ -74,6 +74,24 @@ class RangeWidget(forms.widgets.MultiWidget):
             self._addon_to = self.build_input_addon('to')
         return self._addon_to
 
+    @property
+    def addon_date(self):
+        if not hasattr(self, '_addon_date'):
+            self._addon_date = ''
+        return self._addon_date
+
+    @property
+    def addon_time(self):
+        if not hasattr(self, '_addon_time'):
+            self._addon_time = ''
+        return self._addon_time
+
+    @property
+    def addon_datetime(self):
+        if not hasattr(self, '_addon_datetime'):
+            self._addon_datetime = ''
+        return self._addon_datetime
+
 
 class RangeField(forms.fields.MultiValueField):
     """ django form field for displaying two values representing a range """
@@ -186,8 +204,13 @@ class DateTimeRangeField(RangeField):
             *args, **kwargs
         )
 
+    def clean(self, value):
+        value = super(DateTimeRangeField, self).clean(value)
+        return value
+
     def compress(self, data_list):
         if data_list:
+            raise ValueError(data_list)
             return [datetime.Date(v) for v in data_list]
         return None
 

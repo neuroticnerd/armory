@@ -15,6 +15,10 @@ EMAIL = 'eggleton.bryce@gmail.com'
 DESC = 'Python utilities and tools'
 URL = "https://github.com/neuroticnerd/armory"
 REQUIRES = []
+SCRIPTS = {
+    "console_scripts": [
+        'phone = armory.phone.cli:CLI',
+    ]}
 LONG_DESC = ''
 LICENSE = ''
 VERSION = ''
@@ -38,4 +42,5 @@ setup(
     long_description=LONG_DESC,
     license=LICENSE,
     install_requires=REQUIRES,
+    # entry_points = SCRIPTS,
 )

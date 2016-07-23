@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from __future__ import division, print_function
+
+from armory.phone.cli import CLI
+from armory.phone.phone import PhoneNumber
+from armory.phone.lookup import carrier_lookup, CarrierLookup
 
 DEFAULT_GATEWAYS = {
     "sms_gateways": {
