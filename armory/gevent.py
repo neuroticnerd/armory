@@ -13,19 +13,19 @@ to resolve this undesirable behavior.
 
 
 def patch_gevent_hub():
-    """ this fixes the error handler in the gevent Hub object """
+    """ This patches the error handler in the gevent Hub object. """
     from gevent.hub import Hub
 
-    def fixed_handle_error(self, context, etype, value, tb):
-        """ previously it did not properly handle certain system errors """
+    def patched_handle_error(self, context, etype, value, tb):
+        """ Patched to not print KeyboardInterrupt exceptions. """
         if isinstance(value, str):
             value = etype(value)
-        valid_error = (not issubclass(etype, self.NOT_ERROR))
+        not_error = issubclass(etype, self.NOT_ERROR)
         system_error = issubclass(etype, self.SYSTEM_ERROR)
-        if valid_error and not system_error:
+        if not not_error and not issubclass(etype, KeyboardInterrupt):
             self.print_exception(context, etype, value, tb)
         if context is None or system_error:
             self.handle_system_error(etype, value)
 
     Hub._original_handle_error = Hub.handle_error
-    Hub.handle_error = fixed_handle_error
+    Hub.handle_error = patched_handle_error

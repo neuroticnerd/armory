@@ -1,7 +1,5 @@
-#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from __future__ import division, print_function
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 VERSION = __version__
