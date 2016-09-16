@@ -18,7 +18,9 @@ EMAIL = 'eggleton.bryce@gmail.com'
 DESC = 'Python utilities and tools'
 LONG_DESC = ''
 URL = "https://github.com/neuroticnerd/armory"
-REQUIRES = []
+REQUIRES = [
+    'future',
+]
 SCRIPTS = {
     "console_scripts": [
         'phone = armory.phone.cli:CLI',
