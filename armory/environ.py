@@ -1,11 +1,9 @@
-#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
 import os
 
 from .boolean import boolean
-from .encoding import UnicodeTransformChar
 
 _NOT_PROVIDED = object()
 _ENV_ERROR_MSG = 'Environment variable "{0}" or a default value is required'
@@ -46,10 +44,3 @@ def env(key, default=_NOT_PROVIDED, cast=str, force=False, **kwargs):
             value = cast(value)
 
     return value
-
-
-__all__ = (
-    'boolean',
-    'env',
-    'UnicodeTransformChar',
-)
