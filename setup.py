@@ -14,18 +14,17 @@ here = os.path.abspath(os.path.dirname(__file__))
 PROJECT_MODULE = 'armory'
 PROJECT = 'armory'
 AUTHOR = 'Bryce Eggleton'
-EMAIL = 'eggleton.bryce@gmail.com'
+EMAIL = 'kraken@neuroticnerd.com'
 DESC = 'Python utilities and tools'
 LONG_DESC = ''
 URL = "https://github.com/neuroticnerd/armory"
 REQUIRES = [
     'future',
 ]
-SCRIPTS = {
-    "console_scripts": [
-        'phone = armory.phone.cli:CLI',
-    ]}
-LICENSE = 'BSD'
+ENTRY_POINTS = {
+    "console_scripts": [],
+}
+LICENSE = 'Apache2'
 VERSION = ''
 
 version_file = os.path.join(here, '{0}/__version__.py'.format(PROJECT_MODULE))
@@ -49,5 +48,5 @@ if __name__ == '__main__':
         long_description=LONG_DESC,
         license=LICENSE,
         install_requires=REQUIRES,
-        # entry_points = SCRIPTS,
+        entry_points=ENTRY_POINTS,
     )
