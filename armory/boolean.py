@@ -1,23 +1,25 @@
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from builtins import str
 
+_NOT_DEFINED = object()
 _BOOL_MAP = {
     'y': True,
     'yes': True,
     't': True,
     'true': True,
     '1': True,
+    'on': True,
     'n': False,
     'no': False,
     'f': False,
     'false': False,
     '0': False,
+    'off': False,
 }
 
 
-def boolean(value, boolmap=_BOOL_MAP):
+def boolean(value, boolmap=_BOOL_MAP, ignore_case=True):
     """
     Convert value to <type bool>.
 
@@ -39,11 +41,11 @@ def boolean(value, boolmap=_BOOL_MAP):
     variable which has been given the value of ``"False"`` ends up
     evaluating to ``True`` even though that was probably not the intention.
     """
-    if boolmap == _BOOL_MAP and isinstance(value, str):
-        result = boolmap.get(value.lower())
+    if ignore_case and callable(getattr(value, 'lower', None)):
+        mapvalue = value.lower()
     else:
-        result = boolmap.get(value)
-
-    if result is None:
+        mapvalue = value
+    result = boolmap.get(mapvalue, _NOT_DEFINED)
+    if result is _NOT_DEFINED:
         result = bool(value)
     return result
