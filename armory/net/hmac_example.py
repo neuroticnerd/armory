@@ -2,11 +2,20 @@ from __future__ import absolute_import, unicode_literals
 
 import hashlib
 import hmac
+import itertools
+import time
 from collections import OrderedDict
 
 import requests
 
-from .iteration import monotonic_counter
+
+def monotonic_counter():
+    """
+    Create a monotonic counter seeded with the current time.
+
+    Can store the result as a global variable for generating nonce values.
+    """
+    return itertools.count(int(time.time() * 1000))
 
 
 NONCE_COUNTER = monotonic_counter()
