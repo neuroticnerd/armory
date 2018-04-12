@@ -1,3 +1,6 @@
+"""
+https://github.com/erikrose/more-itertools
+"""
 from __future__ import absolute_import, unicode_literals
 
 import itertools
