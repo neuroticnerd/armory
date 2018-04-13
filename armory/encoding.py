@@ -1,12 +1,55 @@
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import
 
+import io
 import logging
 import re
 import sys
 import unicodedata
 
 log = logging.getLogger(__name__)
+
+DEFAULT_ENCODING_LIST = (
+    'utf8',
+    'ISO-8859-2',
+    'ISO-8859-1',
+    'windows-1250',
+    'utf16',
+    'windows-1252',
+)
+DEFAULT_ENCODING = 'utf8'
+
+
+def decoded_input_lines(self, filename, encoding=None, try_encodings=DEFAULT_ENCODING_LIST):
+    """
+    Yield lines in the input file, decode if needed.
+
+    This also tries decoding the file lines manually since its
+    nearly impossible to guess the file encoding beforehand unless it has
+    been passed as an option, in which case we assume the given value to
+    be correct.
+    """
+    encoding_known = bool(encoding)
+    file_opts = dict()
+    if encoding_known:
+        file_opts['encoding'] = encoding or DEFAULT_ENCODING
+    file_opts['mode'] = 'r' if encoding_known else 'rb'
+    with io.open(filename, **file_opts) as infile:
+        if encoding_known:
+            for line in infile:
+                yield line
+        else:
+            for line in infile:
+                is_decoded = False
+                for encoding in try_encodings:
+                    try:
+                        yield line.decode(encoding)
+                        is_decoded = True
+                        break
+                    except UnicodeDecodeError:
+                        pass
+                if not is_decoded:  # pragma: no cover
+                    log.error('unable to decode line {0}'.format(repr(line)))
 
 
 def get_controlchars_re(sanity_check=False):
