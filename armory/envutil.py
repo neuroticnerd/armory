@@ -11,7 +11,7 @@ _NOT_PROVIDED = object()
 _ENV_ERROR_MSG = 'Environment variable "{0}" or a default value is required'
 
 
-def env_var(key, default=_NOT_PROVIDED, cast=str, force=False, boolmap=True, sticky=False):
+def getenv(key, default=_NOT_PROVIDED, cast=str, force=False, boolmap=True, sticky=False):
     """
     Retrieve environment variables and specify default and options.
 
