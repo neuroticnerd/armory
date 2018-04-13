@@ -20,7 +20,7 @@ DEFAULT_ENCODING_LIST = (
 DEFAULT_ENCODING = 'utf8'
 
 
-def decoded_input_lines(self, filename, encoding=None, try_encodings=DEFAULT_ENCODING_LIST):
+def iter_decoded_lines(self, filename, encoding=None, offset=0, try_encodings=None):
     """
     Yield lines in the input file, decode if needed.
 
@@ -29,12 +29,28 @@ def decoded_input_lines(self, filename, encoding=None, try_encodings=DEFAULT_ENC
     been passed as an option, in which case we assume the given value to
     be correct.
     """
+    try_encodings = try_encodings or DEFAULT_ENCODING_LIST
     encoding_known = bool(encoding)
+    encoding = encoding or DEFAULT_ENCODING
     file_opts = dict()
     if encoding_known:
-        file_opts['encoding'] = encoding or DEFAULT_ENCODING
+        file_opts['encoding'] = encoding
     file_opts['mode'] = 'r' if encoding_known else 'rb'
+
     with io.open(filename, **file_opts) as infile:
+        if offset > 0:
+            log.info('attempting to advance to offset...')
+            infile.seek(0, io.SEEK_END)
+            file_end = infile.tell()
+            if file_end > offset:
+                new_positioin = infile.seek(offset)
+                if new_positioin != offset:
+                    raise ValueError('unable to seek to offset: {0}'.format(offset))
+                log.info('reached offset: {0}'.format(offset))
+            else:
+                infile.seek(0)
+                log.error('invalid offset: {0}'.format(offset))
+
         if encoding_known:
             for line in infile:
                 yield line
