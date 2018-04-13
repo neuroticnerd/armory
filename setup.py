@@ -17,12 +17,14 @@ AUTHOR = 'Bryce Eggleton'
 EMAIL = 'kraken@neuroticnerd.com'
 DESC = 'Python utilities and tools'
 LONG_DESC = ''
-URL = "https://github.com/neuroticnerd/armory"
+URL = 'https://github.com/neuroticnerd/armory'
 REQUIRES = [
     'future',
 ]
 ENTRY_POINTS = {
-    "console_scripts": [],
+    'console_scripts': [
+        'goodresolvers = armory.dns.goodresolvers:find_good_resolvers',
+    ],
 }
 LICENSE = 'Apache2'
 VERSION = ''
